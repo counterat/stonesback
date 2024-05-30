@@ -2,7 +2,9 @@ from aiogram import Bot, Dispatcher, types
 from aiogram.utils import executor
 import logging
 from config import *
-
+from aiogram.types import ParseMode
+from templatemessages import messages as templatemessages
+from inlinekeyboards import inline_keyboards
 import re
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
@@ -38,12 +40,13 @@ async def handler(message:types.Message):
     chat_member = await bot.get_chat_member(chat_id=official_channel_id, user_id=871704893)
     await message.answer(f'{chat_member}') """
 
-@dp.message_handler()
-async def handler(message:types.Message):
-    kb = types.InlineKeyboardMarkup()
-    kb.add(types.InlineKeyboardButton('site',web_app=types.WebAppInfo(url='https://runesfront.yuriyzholtov.com/')))
-    await message.answer('Runes', reply_markup=kb)
-
+@dp.message_handler(commands=['start'])
+async def start_handler(message: types.Message):
+    referal_code = message.get_args()
+    if  not referal_code:
+        referal_code = ''
+    return await message.answer(templatemessages['start_message'](message.from_user.id, message.from_user.first_name), parse_mode=ParseMode.MARKDOWN,
+                          reply_markup=inline_keyboards['start_message'](referal_code))
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)
