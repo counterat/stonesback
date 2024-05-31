@@ -227,7 +227,7 @@ async def payment(request: Request):
         return HTTPException(403)
 
 
-isTest = True
+isTest = False
 @app.post('/authorize')
 async def authorize_user(request: Request):
 
