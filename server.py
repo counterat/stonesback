@@ -247,7 +247,7 @@ async def authorize_user(request: Request):
             if user:
                 return user.to_dict()
             else:
-                userr = await add_user(result['id'],result['first_name'], result.get('username'),datetime.now(), invit_code)
+                userr = await add_user(user_dict['id'],user_dict['first_name'], user_dict.get('username'),datetime.now(), invit_code)
                 return userr.to_dict()
 
         data = await request.json()
