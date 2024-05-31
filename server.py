@@ -237,6 +237,7 @@ async def authorize_user(request: Request):
             invit_code = data.get('invitCode')
             is_ok, result = validate_initdata(initdata, API_TOKEN_FOR_TGBOT)
             user_dict = json.loads(result['user'])
+            print(user_dict, type(user_dict))
             print(result)
             if is_ok:
                 user_id = user_dict['id']
