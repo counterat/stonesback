@@ -236,9 +236,10 @@ async def authorize_user(request: Request):
             initdata = data['initdata']
             invit_code = data.get('invitCode')
             is_ok, result = validate_initdata(initdata, API_TOKEN_FOR_TGBOT)
+            user_dict = json.loads(result['user'])
             print(result)
             if is_ok:
-                user_id = result['user']['id']
+                user_id = user_dict['id']
             else:
                 return HTTPException(403)
             user = await find_user_by_telegram_id(user_id)
