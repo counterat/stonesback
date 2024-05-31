@@ -2,7 +2,7 @@ from aiogram import Bot, Dispatcher, types
 from aiogram.utils import executor
 import logging
 from config import *
-from aiogram.types import ParseMode
+from aiogram.types import ParseMode, InlineKeyboardButton, InlineKeyboardMarkup
 from templatemessages import messages as templatemessages
 from inlinekeyboards import inline_keyboards
 import re
@@ -45,6 +45,12 @@ async def start_handler(message: types.Message):
     referal_code = message.get_args()
     if  not referal_code:
         referal_code = ''
+
+    game_button = InlineKeyboardMarkup().add(
+        InlineKeyboardButton(text="Играть в игру", url='https://runesfront.yuriyzholtov.com/'+referal_code)
+    )
+    
+    await message.reply("Нажми кнопку ниже, чтобы сыграть в игру.", reply_markup=game_button)
     return await message.answer(templatemessages['start_message'](message.from_user.id, message.from_user.first_name), parse_mode=ParseMode.MARKDOWN,
                           reply_markup=inline_keyboards['start_message'](referal_code))
 
