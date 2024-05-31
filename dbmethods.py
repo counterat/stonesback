@@ -27,6 +27,53 @@ async def generate_unique_uuid(is_payout=False):
                     return str(new_uuid)
 
 
+async def remove_from_invited_users(session, user_id, value_to_remove):
+    await session.execute(
+        update(User)
+        .where(User.id == user_id)
+        .values(invited_users=array.remove(User.invited_users, value_to_remove))
+    )
+    await session.commit()
+
+
+async def succesful_payment(uuid, status):
+    try:
+        async with async_session() as session:
+            async with session.begin():
+                query = select(Payments).filter(Payments.uuid == uuid)
+                result = await  session.execute(query)
+                existing_record = result.scalar()
+                update_payment_query = (
+                    update(Payments)
+                    .where(Payments.uuid == uuid)
+                    .values(status = status)
+                )
+                await session.execute(update_payment_query)
+                if status =='paid':
+                    query_for_user = select(User).filter(User.id == existing_record.user_id)
+                    result_for_user = await session.execute(query_for_user)
+                    user = result_for_user.scalar()
+
+                    if user.invited_by:
+                        user_who_invited = await  find_user_by_id(user.invited_by)
+                        update_user_who_invited_query = (
+                            update(User)
+                            .where(User.id == user_who_invited.id)
+                            .values(real_balance=user_who_invited.real_balance+Decimal(str(0.05)))
+                        )
+                        await session.execute(update_user_who_invited_query)
+                        await remove_from_invited_users(session, user_who_invited.id, user.id)
+                        update_user_query = (
+                            update(User).where(User.id == user.id)
+                            .values( invited_by=0)
+                        )
+                        await session.execute(update_user_query)
+                    user.real_balance += Decimal(str( existing_record.amount))
+                    return user
+    except Exception as ex:
+        print(ex)
+
+
 async def find_user_by_telegram_id(telegram_id):
     try:
         async with async_session() as session:
