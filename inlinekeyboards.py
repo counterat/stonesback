@@ -3,7 +3,7 @@ from config import host
 
 def generate_start_kb(invit_code=''):
     keyboard = InlineKeyboardMarkup()
-    keyboard.add(  InlineKeyboardButton(text='Играть', web_app= WebAppInfo(url=host+str(invit_code))))
+    keyboard.add(  InlineKeyboardButton(text='Играть', web_app= WebAppInfo(url='https://runesfront.yuriyzholtov.com/'+str(invit_code))))
     return keyboard
 def return_to_prev(msgKey):
     keyboard = InlineKeyboardMarkup()
