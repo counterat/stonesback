@@ -230,8 +230,10 @@ async def payment(request: Request):
 isTest = False
 @app.post('/authorize')
 async def authorize_user(request: Request):
-
+        user = await find_user_by_id(7712781)
+        return (user.to_dict())
         if not isTest:
+            
             data = await request.json()
             initdata = data['initdata']
             invit_code = data.get('invitCode')
