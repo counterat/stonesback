@@ -155,6 +155,10 @@ async def broadcast_message(message: str):
     for ws in active_websockets:
         await ws.send_text(message)
 
+
+currs_and_networks = {'VERSE': ['ETH'], 'DAI': ['ETH', 'BSC', 'POLYGON'], 'TON': ['TON'], 'ETH': ['BSC', 'ARBITRUM', 'ETH'], 'BCH': ['BCH'], 'DASH': ['DASH'], 'BNB': ['BSC'], 'SOL': ['SOL'], 'XMR': ['XMR'], 'DOGE': ['DOGE'], 'USDC': ['POLYGON', 'ETH', 'BSC', 'ARBITRUM', 'AVALANCHE'], 'CGPT': ['BSC'], 'USDT': ['ARBITRUM', 'ETH', 'BSC', 'TRON', 'SOL', 'AVALANCHE', 'POLYGON'], 'TRX': ['TRON'], 'SHIB': ['ETH'], 'MATIC': ['POLYGON', 'ETH'], 'AVAX': ['AVALANCHE'], 'BTC': ['BTC'], 'LTC': ['LTC']}
+
+
 @app.post('/make_payment')
 async def make_payment(request: Request):
     try:
@@ -170,6 +174,14 @@ async def make_payment(request: Request):
             network = 'TON'
         elif cryptocurrency == 'USDT':
             network = 'TRON'
+        elif cryptocurrency == 'BNB':
+            network = 'BSC'
+        elif cryptocurrency == 'TRX':
+            network = 'TRON'
+        elif cryptocurrency == 'BTC':
+            network = 'BTC'
+        elif cryptocurrency == 'LTC':
+            network = 'LTC'
         result = await  find_user_by_id(user_id)
         user = result
         order_id = await generate_unique_uuid()
@@ -225,7 +237,6 @@ async def payment(request: Request):
 
     except Exception as ex:
         return HTTPException(403)
-
 
 isTest = False
 @app.post('/authorize')
