@@ -1,4 +1,4 @@
-DB_URL = 'postgresql+asyncpg://myuser:XGaaNySprD3@13.50.250.9/mydatabase'
+DB_URL = 'postgresql+asyncpg://myuser:XGaaNySprD3@localhost/mydatabase'
 API_TOKEN_FOR_TGBOT = '7276042632:AAHnWDfZNI3x-VAWJn_4JWwl-E7N2jyHhlk'
 ton_to_fehu_currency = 1000
 min_circle_in_hours = 8
